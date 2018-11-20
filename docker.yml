@@ -2,7 +2,8 @@
   become: true
   vars:
     pack: ["docker-client","docker-client-latest","docker-common","docker-latest","docker-latest-logrotate","docker-logrotate","docker-selinux","docker-engine-selinux","docker-engine"]
-    install_packages: ["yum-utils","device-mapper-persistent-data","lvm2","docker-ce"]
+    install_packages: ["yum-utils","device-mapper-persistent-data","lvm2"]
+    docker_pack: ["docker-ce"]
   tasks:
     - name: removing packages
       yum:
@@ -10,6 +11,13 @@
         state: "absent"
       with_items:
         - "{{ pack }}"
+
+    - name: "Installing packages {{item }}"
+      yum:
+        name: "{{ item}}"
+        state: "installed"
+      with_items:
+        - "{{install_packages}}"
 
     - name: "adding repo"
       get_url:
@@ -20,12 +28,12 @@
       shell: |
              yum-config-manager --enable docker-ce-edge
       
-    - name: "Installing packages {{item }}"
+    - name: "Installing packages docker"
       yum:
         name: "{{ item}}"
-        state: "absent"
+        state: "installed"
       with_items:
-        - "{{install_packages}}"
+        - "{{docker_pack}}"
 
     - name: Restarting the service
       service:
