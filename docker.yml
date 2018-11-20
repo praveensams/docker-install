@@ -27,4 +27,9 @@
       shell: |
              yum-config-manager --enable docker-ce-edge
              yum install docker-ce -y
+      
+    - name: Restarting the service
+      service:
+        name: "docker"
+        state: "started"
 
