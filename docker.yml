@@ -1,0 +1,11 @@
+- hosts: localhost
+  become: true
+
+
+  tasks:
+    - name: installing packages
+      yum:
+        name: "vim"
+        state: "installed"
+
+
