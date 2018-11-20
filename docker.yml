@@ -2,12 +2,29 @@
   become: true
   vars:
     pack: ["docker-client","docker-client-latest","docker-common","docker-latest","docker-latest-logrotate","docker-logrotate","docker-selinux","docker-engine-selinux","docker-engine"]
-
+    install_packages: ["yum-utils","device-mapper-persistent-data","lvm2"]
   tasks:
-    - name: installing packages
+    - name: removing packages
       yum:
         name: "{{ item}}"
         state: "absent"
       with_items:
         - "{{ pack }}"
+
+    - name: "Installing packages {{item }}"
+      yum:
+        name: "{{ item}}"
+        state: "absent"
+      with_items:
+        - "{{install_packages}}"
+
+    - name: "adding repo"
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: "/etc/yum.repos.d/docker-ce.repo"
+   
+    - name: "installing packages"
+      shell: |
+             yum-config-manager --enable docker-ce-edge
+             yum install docker-ce -y
 
