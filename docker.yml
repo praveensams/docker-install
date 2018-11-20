@@ -1,11 +1,13 @@
 - hosts: localhost
   become: true
-
+  vars:
+    pack: ["docker-client","docker-client-latest","docker-common","docker-latest","docker-latest-logrotate","docker-logrotate","docker-selinux","docker-engine-selinux","docker-engine"]
 
   tasks:
     - name: installing packages
       yum:
-        name: "vim"
+        name: "{{ item}}"
         state: "installed"
-
+      with_items:
+        - "{{ pack }}"
 
