@@ -2,6 +2,7 @@
 
 rpm -q ansible || {
 yum install epel-release -y 
+yum install git -y
 yum install ansible -y
 }
 
